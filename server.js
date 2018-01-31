@@ -8,23 +8,18 @@ const compiler = webpack(webpackConfig);
  
 app.use(express.static(__dirname + '/dist'));
  
-// ========================================
-// HOW TO: PRODUCTION FOR DEPLOYMENT
-// COMMENT OUT THE MIDDLEWARE AND SIMPLY COMPILE
-// TO SWITCH BACK TO DEV SIMPLY UNDO COMMENT OUT
-// AND DELETE THE BUNDLE.JS FILE IN DIST FOLDER
-// -Justin
-// ========================================
+if(process.env.NODE_ENV !== 'production') {
+  app.use(webpackDevMiddleware(compiler, {
+    hot: true,
+    filename: 'bundle.js',
+    publicPath: '/',
+    stats: {
+      colors: true,
+    },
+    historyApiFallback: true,
+  }));  
+}
 
-app.use(webpackDevMiddleware(compiler, {
-  hot: true,
-  filename: 'bundle.js',
-  publicPath: '/',
-  stats: {
-    colors: true,
-  },
-  historyApiFallback: true,
-}));
  
 const server = app.listen(3000, function() {
   const host = server.address().address;
