@@ -7,7 +7,6 @@ const Main = () => (
   <BrowserRouter>
     <Switch>
     	<Route exact path="/" component={App} />
-    	<Route exact path="/:parkId" component={App} />
     </Switch>
   </BrowserRouter>
 );
