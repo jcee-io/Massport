@@ -10,12 +10,27 @@ const passport = require('passport');
 
 const compiler = webpack(webpackConfig);
 
+
+
+/*******************************************
+**************** ROUTERS *******************
+*******************************************/
+
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+
 app.use(express.static(__dirname + '/dist'));
 
 app.use(cookieSession({
 	maxAve: 24 * 60 * 60 * 1000,
 	keys: [session.cookieKey]
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 
 if(process.env.NODE_ENV !== 'production') {
   app.use(webpackDevMiddleware(compiler, {
