@@ -5,11 +5,16 @@ const webpackConfig = require('./webpack.config.js');
 const path = require('path');
 const app = express();
 const cookieSession = require('cookie-session');
-const { session } = require('./config/keys');
+const { session, mongodb } = require('./config/keys');
 const passport = require('passport');
-
+const GoogleStrategy = require('./passport/google');
 const compiler = webpack(webpackConfig);
 
+const mongoose = require('mongoose');
+
+mongoose.connect(mongodb.dbURI, () => {
+	console.log('connected to mongodb');
+});
 
 
 /*******************************************
