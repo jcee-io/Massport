@@ -8,6 +8,7 @@ const cookieSession = require('cookie-session');
 const { session, mongodb } = require('./config/keys');
 const passport = require('passport');
 const GoogleStrategy = require('./passport/google');
+const FacebookStrategy = require('./passport/facebook');
 const compiler = webpack(webpackConfig);
 
 const mongoose = require('mongoose');
