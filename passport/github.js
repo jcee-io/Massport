@@ -30,6 +30,13 @@ passport.use(new GithubStrategy({
         done(null, currentUser);
       } else {
         //if not, create user in db
+        return User.findOne({ email: profile.emails[0].value});
+      }
+    })
+    .then(currentUser => {
+      if(currentUser) {
+        done(null, false);
+      } else {
         new User({
           username: profile.displayName,
           githubId: profile.id,

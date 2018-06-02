@@ -29,6 +29,14 @@ passport.use(new FacebookStrategy({
         done(null, currentUser);
       } else {
         //if not, create user in db
+        return User.findOne({ email: profile.emails[0].value })
+      }
+    })
+    .then(currentUser => {
+      if(currentUser) {
+        console.log("email already exists.")
+        return done(null, false);
+      } else {
         new User({
           username: profile.displayName,
           facebookId: profile.id,
