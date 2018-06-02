@@ -1,10 +1,16 @@
 const router = require('express').Router();
 const passport = require('passport');
 
-router.get('/login', (req, res, next) => {
+
+const isLoggedIn = (req, res, next) => {
   if(req.user) {
     res.redirect('/user');
+  } else {
+    next();
   }
+};
+
+router.get('/login', isLoggedIn, (req, res, next) => {
   next();
 });
 
@@ -13,30 +19,28 @@ router.get('/logout', (req,res, next) => {
   res.redirect('/');
 });
 
-router.get('/google', passport.authenticate('google', {
+router.get('/google', isLoggedIn, passport.authenticate('google', {
   scope: ['profile', 'email']
 }));
 
 router.get('/google/redirect', passport.authenticate('google', {
-  failureRedirect: '/login'
+  failureRedirect: '/error/exists'
 }), (req, res) => {
   res.redirect('/user');
 });
 
-router.get('/facebook', passport.authenticate('facebook'));
+router.get('/facebook', isLoggedIn, passport.authenticate('facebook'));
 
 router.get('/facebook/redirect', passport.authenticate('facebook',{
-  failureRedirect: '/login'
+  failureRedirect: '/error/exists'
 }), (req, res) => {
   res.redirect('/user');
 });
 
-router.get('/github', passport.authenticate('github', {
-  scope: ['user:email']
-}));
+router.get('/github', isLoggedIn, passport.authenticate('github'));
 
 router.get('/github/redirect', passport.authenticate('github', {
-  failureRedirect: '/login'
+  failureRedirect: '/error/exists'
 }), (req, res) => {
   res.redirect('/user');
 });
