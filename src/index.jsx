@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Home from './Components/Home';
 import Secret from './Components/Secret';
 import Login from './Components/Login';
+import EmailExists from './Components/EmailExists';
 
 class Main extends Component {
   constructor() {
@@ -39,6 +40,7 @@ class Main extends Component {
             <Route exact path="/" component={Home} />
             <Route path="/auth/login" component={Login} />
             <Route path="/user" component={Secret} />
+            <Route path="/error/exists" component={EmailExists} />
           </Switch>
         </BrowserRouter>
       </div>
