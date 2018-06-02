@@ -17,13 +17,27 @@ router.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email']
 }));
 
-router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
+router.get('/google/redirect', passport.authenticate('google', {
+  failureRedirect: '/login'
+}), (req, res) => {
   res.redirect('/user');
 });
 
 router.get('/facebook', passport.authenticate('facebook'));
 
-router.get('/facebook/redirect', passport.authenticate('facebook'), (req, res) => {
+router.get('/facebook/redirect', passport.authenticate('facebook',{
+  failureRedirect: '/login'
+}), (req, res) => {
+  res.redirect('/user');
+});
+
+router.get('/github', passport.authenticate('github', {
+  scope: ['user:email']
+}));
+
+router.get('/github/redirect', passport.authenticate('github', {
+  failureRedirect: '/login'
+}), (req, res) => {
   res.redirect('/user');
 });
 

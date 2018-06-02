@@ -9,6 +9,7 @@ const { session, mongodb } = require('./config/keys');
 const passport = require('passport');
 const GoogleStrategy = require('./passport/google');
 const FacebookStrategy = require('./passport/facebook');
+const GithubStrategy = require('./passport/github');
 const compiler = webpack(webpackConfig);
 
 const mongoose = require('mongoose');
