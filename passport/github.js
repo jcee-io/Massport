@@ -21,13 +21,13 @@ passport.use(new GithubStrategy({
   callbackURL: '/auth/github/redirect',
   scope: ['user:email']
 }, (accessToken, refreshToken, profile, done) => {
-  console.log(profile);
   User.findOne({ githubId: profile.id })
     .then((currentUser) => {
-      console.log(currentUser);
       if(currentUser) {
         //already have the user
         done(null, currentUser);
+
+        return 'resolved';
       } else {
         //if not, create user in db
         return User.findOne({ email: profile.emails[0].value});
@@ -36,7 +36,7 @@ passport.use(new GithubStrategy({
     .then(currentUser => {
       if(currentUser) {
         done(null, false);
-      } else {
+      } else if (currentUser !== 'resolved') {
         new User({
           username: profile.displayName,
           githubId: profile.id,

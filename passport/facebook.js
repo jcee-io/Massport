@@ -20,13 +20,13 @@ passport.use(new FacebookStrategy({
   callbackURL: '/auth/facebook/redirect',
   profileFields: ['id', 'displayName', 'emails', 'photos']
 }, (accessToken, refreshToken, profile, done) => {
-  console.log(profile);
   User.findOne({ facebookId: profile.id })
     .then((currentUser) => {
-      console.log(currentUser);
       if(currentUser) {
         //already have the user
         done(null, currentUser);
+
+        return 'resolved';
       } else {
         //if not, create user in db
         return User.findOne({ email: profile.emails[0].value })
@@ -36,7 +36,7 @@ passport.use(new FacebookStrategy({
       if(currentUser) {
         console.log("email already exists.")
         return done(null, false);
-      } else {
+      } else if (currentUser !== 'resolved') {
         new User({
           username: profile.displayName,
           facebookId: profile.id,

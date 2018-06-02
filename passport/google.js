@@ -23,10 +23,11 @@ passport.use(
 		//check if user exists
 		User.findOne({ googleId: profile.id })
 		  .then((currentUser) => {
-				console.log(currentUser);
 		  	if(currentUser) {
 		  		//already have the user
 		  		done(null, currentUser);
+
+					return 'resolved';
 		  	} else {
 		  		//if not, create user in db
 					return User.findOne({ email: profile.emails[0].value })
@@ -37,7 +38,7 @@ passport.use(
 				// only one strategy may be used per email
 				if(currentUser) {
 					done(null, false, { message: 'Email address is in use'});
-				} else {
+				} else if (currentUser !== 'resolved') {
 					new User({
 						username: profile.displayName,
 						googleId: profile.id,
