@@ -2,18 +2,8 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const keys = require('../config/keys');
 const User = require('../models/userModels');
-
-
-passport.serializeUser((user, done) => {
-	done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-	User.findById(id)
-	  .then((user) => {
-	  	done(null, user);
-	  });
-});
+const PassportInit = require('./index');
+const { userIdExists, userEmailExists } = PassportInit;
 
 passport.use(
 	new GoogleStrategy({
@@ -21,34 +11,14 @@ passport.use(
 		callbackURL: '/auth/google/redirect'
 	}, (accessToken, refreshToken, profile, done) => {
 		//check if user exists
-		User.findOne({ googleId: profile.id })
-		  .then((currentUser) => {
-		  	if(currentUser) {
-		  		//already have the user
-		  		done(null, currentUser);
+		const UserOptions = {
+			username: profile.displayName,
+			googleId: profile.id,
+			email: profile.emails[0].value
+		};
 
-					return 'resolved';
-		  	} else {
-		  		//if not, create user in db
-					return User.findOne({ email: profile.emails[0].value })
-		  	}
-		  })
-			.then(currentUser => {
-				// check if email is in use
-				// only one strategy may be used per email
-				if(currentUser) {
-					done(null, false, { message: 'Email address is in use'});
-				} else if (currentUser !== 'resolved') {
-					new User({
-						username: profile.displayName,
-						googleId: profile.id,
-						email: profile.emails[0].value
-					}).save()
-						.then((newUser) => {
-							console.log('new user created: ' + newUser);
-							done(null, newUser);
-						});
-				}
-			});
+		User.findOne({ googleId: profile.id })
+		  .then(User => userIdExists(User, done, UserOptions.email))
+			.then(User => userEmailExists(User, UserOptions, done));
 	})
 );
