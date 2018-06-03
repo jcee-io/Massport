@@ -21,7 +21,7 @@ const userIdExists = (currentUser, done, email) => {
 		return 'resolved';
 	} else {
 		//if not, create user in db
-		return User.findOne({ email })
+		return User.findOne({ email });
 	}
 };
 

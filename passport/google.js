@@ -1,14 +1,15 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
-const keys = require('../config/keys');
+const { google } = require('../config/keys');
 const User = require('../models/userModels');
 const PassportInit = require('./index');
 const { userIdExists, userEmailExists } = PassportInit;
 
 passport.use(
 	new GoogleStrategy({
-		...keys.google,
-		callbackURL: '/auth/google/redirect'
+		...google,
+		callbackURL: '/auth/google/redirect',
+		scope: ['profile', 'email']
 	}, (accessToken, refreshToken, profile, done) => {
 		//check if user exists
 		const UserOptions = {

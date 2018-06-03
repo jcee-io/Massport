@@ -19,9 +19,7 @@ router.get('/logout', (req,res, next) => {
   res.redirect('/');
 });
 
-router.get('/google', isLoggedIn, passport.authenticate('google', {
-  scope: ['profile', 'email']
-}));
+router.get('/google', isLoggedIn, passport.authenticate('google'));
 
 router.get('/google/redirect', passport.authenticate('google', {
   failureRedirect: '/error/exists'
