@@ -5,6 +5,7 @@ import Home from './Components/Home';
 import Secret from './Components/Secret';
 import Login from './Components/Login';
 import EmailExists from './Components/EmailExists';
+import SignUp from './Components/SignUp';
 
 class Main extends Component {
   constructor() {
@@ -41,6 +42,8 @@ class Main extends Component {
             <Route path="/auth/login" component={Login} />
             <Route path="/user" component={Secret} />
             <Route path="/error/exists" component={EmailExists} />
+            <Route path="/auth/signup" component={SignUp} />
+            <Route path="*" component={Home} />
           </Switch>
         </BrowserRouter>
       </div>

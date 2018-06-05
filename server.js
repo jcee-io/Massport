@@ -1,18 +1,23 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpack = require('webpack');
 const webpackConfig = require('./webpack.config.js');
 const path = require('path');
-const app = express();
+
 const cookieSession = require('cookie-session');
 const { session, mongodb } = require('./config/keys');
 const passport = require('passport');
+//const LocalStrategy = require('./passport/local');
 const GoogleStrategy = require('./passport/google');
 const FacebookStrategy = require('./passport/facebook');
 const GithubStrategy = require('./passport/github');
 const compiler = webpack(webpackConfig);
 
 const mongoose = require('mongoose');
+
+
+const app = express();
 
 mongoose.connect(mongodb.dbURI, () => {
 	console.log('connected to mongodb');
@@ -33,6 +38,8 @@ app.use(cookieSession({
 	keys: [session.cookieKey]
 }));
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 

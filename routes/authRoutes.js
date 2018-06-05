@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
+const User = require('../models/userModels');
 
 const failureRedirect = {
   failureRedirect: '/error/exists'
@@ -17,10 +18,34 @@ const isLoggedIn = (req, res, next) => {
 
 router.get('/login', isLoggedIn);
 
-router.get('/logout', (req,res, next) => {
+router.get('/logout', (req, res, next) => {
   req.logout();
   res.redirect('/');
 });
+
+
+router.post('/signup/create', (req, res) => {
+  const { username, password, email } = req.body;
+
+  User.findOne({ email })
+    .then((currentUser) => {
+      if(currentUser) {
+        console.log('user exists');
+        res.redirect('/error/exists');
+      } else {
+        console.log('user does not exist');
+        User.register({ username, email }, password)
+          .then((user) => {
+            passport.authenticate('local', failureRedirect)(req, res, () => {
+              res.redirect('/user');
+            });
+          });
+        res.redirect('/');
+      }
+    });
+});
+
+router.post('/local', passport.authenticate('local', failureRedirect), redirectToSecret);
 
 router.get('/google', isLoggedIn, passport.authenticate('google'));
 
@@ -36,7 +61,6 @@ router.get('/github/redirect', passport.authenticate('github', failureRedirect),
 
 router.get('/status', (req, res) => {
   let isLoggedIn = false;
-  console.log(req.user);
   if(req.user) {
     isLoggedIn = true;
   }
