@@ -31,16 +31,25 @@ router.post('/signup/create', (req, res) => {
     .then((currentUser) => {
       if(currentUser) {
         console.log('user exists');
-        res.redirect('/error/exists');
+
+        User.findOne({ username })
+          .then(user => {
+            if(user) {
+              //TODO: Make a page for "user exists"
+              res.redirect('/error/exists');
+            } else {
+              res.redirect('/error/exists');
+            }
+          });
       } else {
         console.log('user does not exist');
         User.register({ username, email }, password)
           .then((user) => {
-            passport.authenticate('local', failureRedirect)(req, res, () => {
+            console.log('user created');
+            passport.authenticate('local')(req, res, () => {
               res.redirect('/user');
             });
           });
-        res.redirect('/');
       }
     });
 });

@@ -12,6 +12,7 @@ const passport = require('passport');
 const GoogleStrategy = require('./passport/google');
 const FacebookStrategy = require('./passport/facebook');
 const GithubStrategy = require('./passport/github');
+const LocalStrategy = require('./passport/local');
 const compiler = webpack(webpackConfig);
 
 const mongoose = require('mongoose');
