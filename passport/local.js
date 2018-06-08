@@ -12,6 +12,7 @@ passport.use(
           if(!currentUser) {
             done(null, false);
           } else {
+            console.log('logging in');
             User.authenticate()(username, password)
               .then((result) => {
                 if(!result) {

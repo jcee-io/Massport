@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Home from './Components/Home';
+import Header from './Components/Header';
 import Secret from './Components/Secret';
 import Login from './Components/Login';
 import EmailExists from './Components/EmailExists';
@@ -17,7 +18,6 @@ class Main extends Component {
     }
   }
   componentDidMount() {
-    console.log(document.cookie);
     fetch('/auth/status', { credentials: 'same-origin'})
       .then(response => response.json())
       .then(data => {
@@ -33,9 +33,7 @@ class Main extends Component {
 
     return(
       <div>
-        <nav>
-          <h1>{ user ? `${user.username} (${user.email})` : 'Login Sign Up' }</h1>
-        </nav>
+        <Header {...this.state} />
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Home} />
